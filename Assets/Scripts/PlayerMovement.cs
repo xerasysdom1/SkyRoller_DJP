@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     float forwardSpeed = 8f;
@@ -10,10 +11,25 @@ public class PlayerMovement : MonoBehaviour
 
     float currentSideInput;
     float sideVelocity;
+    float originalForwardSpeed;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        originalForwardSpeed = forwardSpeed;
+    }
+
+    public void ActivateSpeedBoost(float boostAmount, float duration)
+    {
+        StartCoroutine(SpeedBoostRoutine(boostAmount, duration));
+    }
+
+    private IEnumerator SpeedBoostRoutine(float boostAmount, float duration)
+    {
+        forwardSpeed = boostAmount;
+        yield return new WaitForSeconds(duration);
+        forwardSpeed = originalForwardSpeed;
     }
 
     void OnMove(InputValue value)
